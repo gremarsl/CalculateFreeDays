@@ -113,19 +113,18 @@ internal class main
     {
         DateTime[] variableholidays = new DateTime[6];
 
-        variableholidays[0] = new DateTime(year, 04, 07);
-
         DateTime easterSunday = CalcEasterSunday(year);
-        int friday = easterSunday.Day - 2;
-        DateTime karFriday = new DateTime(year, easterSunday.Month, friday);
-        int monday = easterSunday.Day + 1;
-        DateTime easterMonday = new DateTime(year, easterSunday.Month, monday);
+        int numberOfDayEasterSunday = easterSunday.DayOfYear;
+
+        int karfriday = numberOfDayEasterSunday + -2;
+        DateTime karFriday = new DateTime(year, 1, 1).AddDays(karfriday - 1);
+        
+        int eastermonday = numberOfDayEasterSunday + 1;
+        DateTime easterMonday = new DateTime(year, 1, 1).AddDays(eastermonday - 1);
 
         variableholidays[0] = karFriday;
         variableholidays[1] = easterSunday;
         variableholidays[2] = easterMonday;
-
-        int numberOfDayEasterSunday = easterSunday.DayOfYear;
 
         // Calculate Christ Ascension
         int numberOfDayChristAscension = numberOfDayEasterSunday + 39;
