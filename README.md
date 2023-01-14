@@ -15,6 +15,11 @@ e.g.
 CalcFreeDays 2023 30
 "Calculate the number of free days for the year 2023 with 30 vacation days on 01.01.2023)
 
+# Build 
+1. To build a standalone .exe run this command 
+   dotnet publish -r win10-x64 -p:PublishSingleFile=true
+2. Publish .exe and .pdb 
+
 # Possible Improvements
 - Implement this calculation for other federal states of germany
 
