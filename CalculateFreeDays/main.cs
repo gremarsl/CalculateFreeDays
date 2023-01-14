@@ -27,10 +27,11 @@ internal class main
 
     private static void Main(string[] args)
     {
-        //Input
+        // Inputs.
         int numberOfVacationDays = Int32.Parse(args[1]); 
         int year = Int32.Parse(args[0]);
 
+        // Basic calculations.
         var isLeapYear = DateTime.IsLeapYear(year);
         DateTime new_year = new DateTime(year, 1, 1);
         DayOfWeek dayOne = new_year.DayOfWeek;
@@ -46,7 +47,7 @@ internal class main
 
         int numOfWeekendDays = CalcWeekendDays(in dayOne);
         
-
+        // calculate total free days.
         int totalFreeDays = numOfHolidaysAreWeekdays + numberOfVacationDays + numOfWeekendDays;
 
         Console.WriteLine("Since you have: \n" +
@@ -78,7 +79,7 @@ internal class main
         return numOfWeekendDays;
     }
 
-    private static void CalcFixHolidays(in int year,ref int numberOfHolidaysAreWeekend, ref int numberOfHolidaysAreWeekdays)
+    private static void CalcFixHolidays(in int year,ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
     {
         //TODO pass this array as reference and store the holidays in the array 
         DateTime[] fixHolidays = new DateTime[]
@@ -97,19 +98,18 @@ internal class main
         {
             if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
             {
-                numberOfHolidaysAreWeekend++;
+                numOfHolidaysAreWeekend++;
             }
             else
             {
-                numberOfHolidaysAreWeekdays++;
+                numOfHolidaysAreWeekdays++;
                 Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
-
             }
         }
 
     }
 
-    private static void CalcVariableHolidays(in int year, ref int numberOfHolidaysAreWeekend, ref int numberOfHolidaysAreWeekdays)
+    private static void CalcVariableHolidays(in int year, ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
     {
         DateTime[] variableholidays = new DateTime[6];
 
@@ -125,35 +125,22 @@ internal class main
         variableholidays[1] = easterSunday;
         variableholidays[2] = easterMonday;
 
-
-        //// Calculate Christ Ascension
         int numberOfDayEasterSunday = easterSunday.DayOfYear;
 
+        // Calculate Christ Ascension
         int numberOfDayChristAscension = numberOfDayEasterSunday + 39;
         DateTime christAscension = new DateTime(year, 1, 1).AddDays(numberOfDayChristAscension - 1);
         variableholidays[3] = christAscension;
 
-        //Console.WriteLine("ChristAscension: {0}", christAscension);
-
-
         // Calculate Pfingstmontag 
-        // genau 50 Tage nach Ostern 
-        //Der Pfingstsonntag ist der 50. Tag der Osterzeit, also 49 Tage nach dem Ostersonntag
-        // Pfingstmontag ist 50 Tage nach Ostersonntag
         int numberOfDayWhitMonday = numberOfDayEasterSunday + 50;
         DateTime whitmonday = new DateTime(year, 1, 1).AddDays(numberOfDayWhitMonday - 1);
-        //Console.WriteLine("WhitMonday: {0}", whitmonday);
         variableholidays[4] = whitmonday;
 
-
-        //Calculate Corpus Christi
-        // genau 60 Tage nach dem Ostersonntag
+        // Calculate Corpus Christi
         int numberOfDayCorpusChristi = numberOfDayEasterSunday + 60;
         DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
-        //Console.WriteLine("CorpusChristi: {0}", corpusChristi);
         variableholidays[5] = corpusChristi;
-
-
 
         // NOW START TO CALCULATE
 
@@ -161,16 +148,13 @@ internal class main
         {
             if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
             {
-                numberOfHolidaysAreWeekend++;
+                numOfHolidaysAreWeekend++;
             }
             else
             {
-                numberOfHolidaysAreWeekdays++;
+                numOfHolidaysAreWeekdays++;
                 Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
             }
         }
-
-
-
     }
 }
