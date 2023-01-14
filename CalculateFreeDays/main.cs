@@ -3,7 +3,7 @@
 internal class main
 
 {
-    private static DateTime EasterSunday(int year)
+    private static DateTime CalcEasterSunday(int year)
     {
         int day = 0;
         int month = 0;
@@ -27,13 +27,8 @@ internal class main
 
     private static void Main(string[] args)
     {
-
-
         //Input
-        int numberOfVacationDays = Int32.Parse(args[1]);
-
-        // TODO enter year 
-        // parse input 
+        int numberOfVacationDays = Int32.Parse(args[1]); 
         int year = Int32.Parse(args[0]);
 
         var isLeapYear = DateTime.IsLeapYear(year);
@@ -45,19 +40,13 @@ internal class main
         int numberOfHolidaysAreWeekdays = 0;
         int numberOfHolidaysAreWeekend = 0;
 
-        DateTime[] fixholidays = new DateTime[]
-        {
-            new DateTime(year, 01, 01),
-            new DateTime(year, 01, 06),
-            new DateTime(year, 05, 01),
-            new DateTime(year, 10, 03),
-            new DateTime(year, 11, 01),
-            new DateTime(year, 12, 25),
-            new DateTime(year, 12, 26),
-        };
+        //TODO pass this array as reference and store the holidays in the array 
+        DateTime[] fixHolidays = new DateTime[7];
+
+        CalcFixHolidays(year, ref fixHolidays);
 
 
-        foreach (DateTime holiday in fixholidays)
+        foreach (DateTime holiday in fixHolidays)
         {
             if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
             {
@@ -71,12 +60,10 @@ internal class main
             }
         }
 
-        DateTime easterSunday = EasterSunday(year);
-
-        //TODO pass this array as reference and store the holidays in the array 
+        //Pass this array as reference and store the holidays in the array.
         DateTime[] variableholidays = new DateTime[6];
 
-        GetVariableHolidays(year, ref variableholidays);
+        CalcVariableHolidays(year, ref variableholidays);
 
         foreach (DateTime holiday in variableholidays)
         {
@@ -118,11 +105,22 @@ internal class main
 
     }
 
-    private static void GetVariableHolidays(in int year, ref DateTime[] refArray)
+    private static void CalcFixHolidays(in int year, ref DateTime[] refArray)
+    {
+        refArray[0] = new DateTime(year, 01, 01);
+        refArray[1] = new DateTime(year, 01, 06);
+        refArray[2] = new DateTime(year, 05, 01);
+        refArray[3] = new DateTime(year, 10, 03);
+        refArray[4] = new DateTime(year, 11, 01);
+        refArray[5] = new DateTime(year, 12, 25);
+        refArray[6] = new DateTime(year, 12, 26);
+    }
+
+    private static void CalcVariableHolidays(in int year, ref DateTime[] refArray)
     {
         refArray[0] = new DateTime(year, 04, 07);
 
-        DateTime easterSunday = EasterSunday(year);
+        DateTime easterSunday = CalcEasterSunday(year);
         int friday = easterSunday.Day - 2;
         DateTime karFriday = new DateTime(year, easterSunday.Month, friday);
         int monday = easterSunday.Day + 1;
