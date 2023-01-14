@@ -40,25 +40,7 @@ internal class main
         int numberOfHolidaysAreWeekdays = 0;
         int numberOfHolidaysAreWeekend = 0;
 
-        //TODO pass this array as reference and store the holidays in the array 
-        DateTime[] fixHolidays = new DateTime[7];
-
-        CalcFixHolidays(year, ref fixHolidays);
-
-
-        foreach (DateTime holiday in fixHolidays)
-        {
-            if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
-            {
-                numberOfHolidaysAreWeekend++;
-            }
-            else
-            {
-                numberOfHolidaysAreWeekdays++;
-                Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
-
-            }
-        }
+        CalcFixHolidays(year,ref numberOfHolidaysAreWeekdays,ref numberOfHolidaysAreWeekend);
 
         //Pass this array as reference and store the holidays in the array.
         DateTime[] variableholidays = new DateTime[6];
@@ -105,15 +87,35 @@ internal class main
 
     }
 
-    private static void CalcFixHolidays(in int year, ref DateTime[] refArray)
+    private static void CalcFixHolidays(in int year,ref int numberOfHolidaysAreWeekend, ref int numberOfHolidaysAreWeekdays )
     {
-        refArray[0] = new DateTime(year, 01, 01);
-        refArray[1] = new DateTime(year, 01, 06);
-        refArray[2] = new DateTime(year, 05, 01);
-        refArray[3] = new DateTime(year, 10, 03);
-        refArray[4] = new DateTime(year, 11, 01);
-        refArray[5] = new DateTime(year, 12, 25);
-        refArray[6] = new DateTime(year, 12, 26);
+        //TODO pass this array as reference and store the holidays in the array 
+        DateTime[] fixHolidays = new DateTime[]
+        {
+            new DateTime(year, 01, 01),
+            new DateTime(year, 01, 06),
+            new DateTime(year, 05, 01),
+            new DateTime(year, 10, 03),
+            new DateTime(year, 11, 01),
+            new DateTime(year, 12, 25),
+            new DateTime(year, 12, 26),
+        };
+
+
+        foreach (DateTime holiday in fixHolidays)
+        {
+            if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
+            {
+                numberOfHolidaysAreWeekend++;
+            }
+            else
+    {
+                numberOfHolidaysAreWeekdays++;
+                Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
+
+            }
+        }
+
     }
 
     private static void CalcVariableHolidays(in int year, ref DateTime[] refArray)
@@ -157,6 +159,9 @@ internal class main
         DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
         //Console.WriteLine("CorpusChristi: {0}", corpusChristi);
         refArray[5] = corpusChristi;
+
+
+
 
     }
 }
