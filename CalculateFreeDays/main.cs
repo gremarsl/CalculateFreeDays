@@ -37,57 +37,48 @@ internal class main
         DateTime lastDay = new DateTime(year - 1, 12, 31);
         var dayZero = lastDay.DayOfWeek;
 
-        int numberOfHolidaysAreWeekdays = 0;
-        int numberOfHolidaysAreWeekend = 0;
+        int numOfHolidaysAreWeekdays = 0;
+        int numOfHolidaysAreWeekend = 0;
 
-        CalcFixHolidays(year,ref numberOfHolidaysAreWeekdays,ref numberOfHolidaysAreWeekend);
+        CalcFixHolidays(year,ref numOfHolidaysAreWeekdays,ref numOfHolidaysAreWeekend);
 
-        //Pass this array as reference and store the holidays in the array.
-        DateTime[] variableholidays = new DateTime[6];
+        CalcVariableHolidays(in year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
 
-        CalcVariableHolidays(year, ref variableholidays);
+        int numOfWeekendDays = CalcWeekendDays(in dayOne);
+        
 
-        foreach (DateTime holiday in variableholidays)
-        {
-            if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
-            {
-                numberOfHolidaysAreWeekend++;
-            }
-            else
-            {
-                numberOfHolidaysAreWeekdays++;
-                Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
-            }
-        }
-
-        var weekendDays = 52 * 2;
-        switch (dayOne)
-        {
-            case DayOfWeek.Friday:
-                weekendDays += 2;
-                break;
-
-            case DayOfWeek.Saturday:
-                weekendDays += 2;
-                break;
-            case DayOfWeek.Sunday:
-                weekendDays += 1;
-                break;
-        }
-
-        int totalFreeDays = numberOfHolidaysAreWeekdays + numberOfVacationDays + weekendDays;
+        int totalFreeDays = numOfHolidaysAreWeekdays + numberOfVacationDays + numOfWeekendDays;
 
         Console.WriteLine("Since you have: \n" +
-                          "{0} vacationdays, \n" +
-                          "{1} holidays on workingdays and \n" +
-                          "{2} days which are Saturday or Sunday \n" +
-                          "You have in total {3} free days in {4}", numberOfVacationDays, numberOfHolidaysAreWeekdays, weekendDays, totalFreeDays, year);
-
-
+                          $"{numberOfVacationDays} vacationdays, \n" +
+                          $"{numOfHolidaysAreWeekdays} holidays on workingdays and \n" +
+                          $"{numOfWeekendDays} days which are Saturday or Sunday \n" +
+                          $"-> In total you have {totalFreeDays} free days in {year}");
 
     }
 
-    private static void CalcFixHolidays(in int year,ref int numberOfHolidaysAreWeekend, ref int numberOfHolidaysAreWeekdays )
+    private static int CalcWeekendDays(in DayOfWeek dayOne)
+    {
+        var numOfWeekendDays = 52 * 2;
+
+        switch (dayOne)
+        {
+            case DayOfWeek.Friday:
+                numOfWeekendDays += 2;
+                break;
+
+            case DayOfWeek.Saturday:
+                numOfWeekendDays += 2;
+                break;
+            case DayOfWeek.Sunday:
+                numOfWeekendDays += 1;
+                break;
+        }
+
+        return numOfWeekendDays;
+    }
+
+    private static void CalcFixHolidays(in int year,ref int numberOfHolidaysAreWeekend, ref int numberOfHolidaysAreWeekdays)
     {
         //TODO pass this array as reference and store the holidays in the array 
         DateTime[] fixHolidays = new DateTime[]
@@ -109,7 +100,7 @@ internal class main
                 numberOfHolidaysAreWeekend++;
             }
             else
-    {
+            {
                 numberOfHolidaysAreWeekdays++;
                 Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
 
@@ -118,9 +109,11 @@ internal class main
 
     }
 
-    private static void CalcVariableHolidays(in int year, ref DateTime[] refArray)
+    private static void CalcVariableHolidays(in int year, ref int numberOfHolidaysAreWeekend, ref int numberOfHolidaysAreWeekdays)
     {
-        refArray[0] = new DateTime(year, 04, 07);
+        DateTime[] variableholidays = new DateTime[6];
+
+        variableholidays[0] = new DateTime(year, 04, 07);
 
         DateTime easterSunday = CalcEasterSunday(year);
         int friday = easterSunday.Day - 2;
@@ -128,9 +121,9 @@ internal class main
         int monday = easterSunday.Day + 1;
         DateTime easterMonday = new DateTime(year, easterSunday.Month, monday);
 
-        refArray[0] = karFriday;
-        refArray[1] = easterSunday;
-        refArray[2] = easterMonday;
+        variableholidays[0] = karFriday;
+        variableholidays[1] = easterSunday;
+        variableholidays[2] = easterMonday;
 
 
         //// Calculate Christ Ascension
@@ -138,7 +131,7 @@ internal class main
 
         int numberOfDayChristAscension = numberOfDayEasterSunday + 39;
         DateTime christAscension = new DateTime(year, 1, 1).AddDays(numberOfDayChristAscension - 1);
-        refArray[3] = christAscension;
+        variableholidays[3] = christAscension;
 
         //Console.WriteLine("ChristAscension: {0}", christAscension);
 
@@ -150,7 +143,7 @@ internal class main
         int numberOfDayWhitMonday = numberOfDayEasterSunday + 50;
         DateTime whitmonday = new DateTime(year, 1, 1).AddDays(numberOfDayWhitMonday - 1);
         //Console.WriteLine("WhitMonday: {0}", whitmonday);
-        refArray[4] = whitmonday;
+        variableholidays[4] = whitmonday;
 
 
         //Calculate Corpus Christi
@@ -158,8 +151,24 @@ internal class main
         int numberOfDayCorpusChristi = numberOfDayEasterSunday + 60;
         DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
         //Console.WriteLine("CorpusChristi: {0}", corpusChristi);
-        refArray[5] = corpusChristi;
+        variableholidays[5] = corpusChristi;
 
+
+
+        // NOW START TO CALCULATE
+
+        foreach (DateTime holiday in variableholidays)
+        {
+            if (holiday.DayOfWeek == DayOfWeek.Sunday || holiday.DayOfWeek == DayOfWeek.Saturday)
+            {
+                numberOfHolidaysAreWeekend++;
+            }
+            else
+            {
+                numberOfHolidaysAreWeekdays++;
+                Console.WriteLine("The holiday: {0} is a {1}", holiday, holiday.DayOfWeek);
+            }
+        }
 
 
 
