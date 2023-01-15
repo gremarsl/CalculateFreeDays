@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 internal class main
 
 {
+
     private static DateTime CalcEasterSunday(int year)
     {
         int day = 0;
@@ -40,10 +41,6 @@ internal class main
         DateTime lastDay = new DateTime(year - 1, 12, 31);
         var dayZero = lastDay.DayOfWeek;
 
-
-        // Feature to calc number of free days in a row 
-        calcNumOfFreeDaysRow(numOfVacDays);
-
         int numOfHolidaysAreWeekdays = 0;
         int numOfHolidaysAreWeekend = 0;
 
@@ -62,39 +59,100 @@ internal class main
                           $"{numOfWeekendDays} days which are Saturday or Sunday \n" +
                           $"-> In total you have {totalFreeDays} free days in {year}");
 
-        
+
+
+        // Feature to calc number of free days in a row 
+        calcMaxNumOfFreeDaysRow(year, numOfVacDays);
+
+
     }
 
-    private static void calcNumOfFreeDaysRow(int vacDays)
+    private static void calcMaxNumOfFreeDaysRow(int year,int vacDays)
     {
+        int maximumDaysInARow = 0; 
         int daysInARow;
-        if (vacDays < 5)
-        {
-            daysInARow = 2 + vacDays;
-            Console.WriteLine($" With {vacDays} you can have {daysInARow} days in a row free");
-        }
+        DateTime[] fixHolidays = GetFixHolidays(year);
+        DateTime[] varHolidays = GetVariableHolidays(year);
 
-        else
-        {
-            int numOfFullWeeks = (int)vacDays / 5;
-            int rest = vacDays % 5;
-            Console.WriteLine($"You have {numOfFullWeeks} full weeks of vacation in this year");
-            daysInARow = numOfFullWeeks * 7;
+        //Concat two arrays
+        DateTime[] totalHolidays = new DateTime[fixHolidays.Length + varHolidays.Length];
+        fixHolidays.CopyTo(totalHolidays, 0);
+        varHolidays.CopyTo(totalHolidays, fixHolidays.Length);
 
-            if (rest == 0) 
+        int[] dayNumOfYear = totalHolidays.Select(x => x.DayOfYear).ToArray();
+
+        for (int j = 0; j < totalHolidays.Length; j++)
+        {
+            int loc_vacDays = vacDays;
+            Console.WriteLine("###");
+            DateTime vacStart = totalHolidays[j];
+
+            int numOfDayStart = vacStart.DayOfYear;
+            int end = numOfDayStart + loc_vacDays;
+            DateTime vacEnd = new DateTime(year, 1, 1).AddDays(end - 1);
+            Console.WriteLine($"Vacation start: {vacStart} \nVacation end: {vacEnd}\nVacation days {loc_vacDays}");
+
+            int holiday_cnt = 0;
+            for (int i = 0; i < totalHolidays.Length; i++)
             {
-                // +2 for the next upcomming weekend
-                daysInARow = daysInARow + 2;
+                if (vacStart.DayOfYear <= dayNumOfYear[i] && dayNumOfYear[i] <= vacEnd.DayOfYear)
+                {
+                    if (totalHolidays[i].DayOfWeek == DayOfWeek.Sunday || totalHolidays[i].DayOfWeek == DayOfWeek.Saturday)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        loc_vacDays++;
+                        holiday_cnt++;
+                    }
+                }
+                
             }
+            Console.WriteLine($"There are {holiday_cnt} holidays falling on a weekday in your period");
+
+            if (vacDays < 5)
+            {
+                daysInARow = 2 + vacDays;
+                
+                if (daysInARow > maximumDaysInARow)
+                {
+                    maximumDaysInARow = daysInARow;
+                    Console.WriteLine($"New maximum with: {maximumDaysInARow} - So far you can have with {loc_vacDays} vacation days {daysInARow} days in a row free.");
+                }
+            }
+
             else
             {
-                daysInARow = daysInARow + 2 + rest;
+                int numOfFullWeeks = (int)loc_vacDays / 5;
+                int rest = loc_vacDays % 5;
 
+                daysInARow = numOfFullWeeks * 7;
+
+                if (rest == 0) 
+                {
+                    // +2 for the next upcomming weekend
+                    daysInARow = daysInARow + 2;
+                }
+                else
+                {
+                    daysInARow = daysInARow + 2 + rest;
+
+                }
+
+                if (daysInARow >= maximumDaysInARow)
+                {
+                    maximumDaysInARow = daysInARow;
+                    Console.WriteLine($"Maximum with {maximumDaysInARow} days in a row free.");
+                    int new_end = numOfDayStart + maximumDaysInARow;
+                    DateTime new_vacEnd = new DateTime(year, 1, 1).AddDays(new_end - 1);
+                    Console.WriteLine($"Start would be: {vacStart} and would finish on {new_vacEnd}");
+                }
+                
+
+                //TODO: Improve with recursive function call
             }
 
-            Console.WriteLine($"With {vacDays} you can have {daysInARow} days in a row free");
-
-            //TODO: Improve with recursive function call
         }
 
     }
@@ -120,9 +178,8 @@ internal class main
         return numOfWeekendDays;
     }
 
-    private static void CalcFixHolidays(in int year,ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
+    private static DateTime[] GetFixHolidays(int year)
     {
-        //TODO pass this array as reference and store the holidays in the array 
         DateTime[] fixHolidays = new DateTime[]
         {
             new DateTime(year, 01, 01),
@@ -134,6 +191,49 @@ internal class main
             new DateTime(year, 12, 26),
         };
 
+        return fixHolidays;
+
+    }
+
+    private static DateTime[] GetVariableHolidays(int year)
+    {
+        DateTime[] variableHolidays = new DateTime[6];
+
+        DateTime easterSunday = CalcEasterSunday(year);
+        int numberOfDayEasterSunday = easterSunday.DayOfYear;
+
+        int karfriday = numberOfDayEasterSunday + -2;
+        DateTime karFriday = new DateTime(year, 1, 1).AddDays(karfriday - 1);
+
+        int eastermonday = numberOfDayEasterSunday + 1;
+        DateTime easterMonday = new DateTime(year, 1, 1).AddDays(eastermonday - 1);
+
+        variableHolidays[0] = karFriday;
+        variableHolidays[1] = easterSunday;
+        variableHolidays[2] = easterMonday;
+
+        // Calculate Christ Ascension
+        int numberOfDayChristAscension = numberOfDayEasterSunday + 39;
+        DateTime christAscension = new DateTime(year, 1, 1).AddDays(numberOfDayChristAscension - 1);
+        variableHolidays[3] = christAscension;
+
+        // Calculate Pfingstmontag 
+        int numberOfDayWhitMonday = numberOfDayEasterSunday + 50;
+        DateTime whitmonday = new DateTime(year, 1, 1).AddDays(numberOfDayWhitMonday - 1);
+        variableHolidays[4] = whitmonday;
+
+        // Calculate Corpus Christi
+        int numberOfDayCorpusChristi = numberOfDayEasterSunday + 60;
+        DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
+        variableHolidays[5] = corpusChristi;
+
+        return variableHolidays;
+    }
+
+    private static void CalcFixHolidays(in int year,ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
+    {
+
+        DateTime[] fixHolidays = GetFixHolidays(year);
 
         foreach (DateTime holiday in fixHolidays)
         {
@@ -152,37 +252,8 @@ internal class main
 
     private static void CalcVariableHolidays(in int year, ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
     {
-        DateTime[] variableholidays = new DateTime[6];
+        DateTime[] variableholidays = GetVariableHolidays(year);
 
-        DateTime easterSunday = CalcEasterSunday(year);
-        int numberOfDayEasterSunday = easterSunday.DayOfYear;
-
-        int karfriday = numberOfDayEasterSunday + -2;
-        DateTime karFriday = new DateTime(year, 1, 1).AddDays(karfriday - 1);
-        
-        int eastermonday = numberOfDayEasterSunday + 1;
-        DateTime easterMonday = new DateTime(year, 1, 1).AddDays(eastermonday - 1);
-
-        variableholidays[0] = karFriday;
-        variableholidays[1] = easterSunday;
-        variableholidays[2] = easterMonday;
-
-        // Calculate Christ Ascension
-        int numberOfDayChristAscension = numberOfDayEasterSunday + 39;
-        DateTime christAscension = new DateTime(year, 1, 1).AddDays(numberOfDayChristAscension - 1);
-        variableholidays[3] = christAscension;
-
-        // Calculate Pfingstmontag 
-        int numberOfDayWhitMonday = numberOfDayEasterSunday + 50;
-        DateTime whitmonday = new DateTime(year, 1, 1).AddDays(numberOfDayWhitMonday - 1);
-        variableholidays[4] = whitmonday;
-
-        // Calculate Corpus Christi
-        int numberOfDayCorpusChristi = numberOfDayEasterSunday + 60;
-        DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
-        variableholidays[5] = corpusChristi;
-
-        // NOW START TO CALCULATE
 
         foreach (DateTime holiday in variableholidays)
         {
@@ -198,3 +269,8 @@ internal class main
         }
     }
 }
+
+
+
+/*
+ How to define smart a C# array */
