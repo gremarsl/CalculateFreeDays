@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 internal class main
 
@@ -27,8 +28,9 @@ internal class main
 
     private static void Main(string[] args)
     {
+
         // Inputs.
-        int numberOfVacationDays = Int32.Parse(args[1]); 
+        int numOfVacDays = Int32.Parse(args[1]); 
         int year = Int32.Parse(args[0]);
 
         // Basic calculations.
@@ -37,6 +39,10 @@ internal class main
         DayOfWeek dayOne = new_year.DayOfWeek;
         DateTime lastDay = new DateTime(year - 1, 12, 31);
         var dayZero = lastDay.DayOfWeek;
+
+
+        // Feature to calc number of free days in a row 
+        calcNumOfFreeDaysRow(numOfVacDays);
 
         int numOfHolidaysAreWeekdays = 0;
         int numOfHolidaysAreWeekend = 0;
@@ -48,13 +54,48 @@ internal class main
         int numOfWeekendDays = CalcWeekendDays(in dayOne);
         
         // calculate total free days.
-        int totalFreeDays = numOfHolidaysAreWeekdays + numberOfVacationDays + numOfWeekendDays;
+        int totalFreeDays = numOfHolidaysAreWeekdays + numOfVacDays + numOfWeekendDays;
 
         Console.WriteLine("Since you have: \n" +
-                          $"{numberOfVacationDays} vacationdays, \n" +
+                          $"{numOfVacDays} vacationdays, \n" +
                           $"{numOfHolidaysAreWeekdays} holidays on workingdays and \n" +
                           $"{numOfWeekendDays} days which are Saturday or Sunday \n" +
                           $"-> In total you have {totalFreeDays} free days in {year}");
+
+        
+    }
+
+    private static void calcNumOfFreeDaysRow(int vacDays)
+    {
+        int daysInARow;
+        if (vacDays < 5)
+        {
+            daysInARow = 2 + vacDays;
+            Console.WriteLine($" With {vacDays} you can have {daysInARow} days in a row free");
+        }
+
+        else
+        {
+            int numOfFullWeeks = (int)vacDays / 5;
+            int rest = vacDays % 5;
+            Console.WriteLine($"You have {numOfFullWeeks} full weeks of vacation in this year");
+            daysInARow = numOfFullWeeks * 7;
+
+            if (rest == 0) 
+            {
+                // +2 for the next upcomming weekend
+                daysInARow = daysInARow + 2;
+            }
+            else
+            {
+                daysInARow = daysInARow + 2 + rest;
+
+            }
+
+            Console.WriteLine($"With {vacDays} you can have {daysInARow} days in a row free");
+
+            //TODO: Improve with recursive function call
+        }
 
     }
 
