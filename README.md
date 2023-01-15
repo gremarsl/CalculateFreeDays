@@ -8,16 +8,20 @@ This is a small program to calculate the number of free days as an employee in B
 # Usage 
 
 Call the CalcFreeDays.exe and pass two arguments. 
-1. Year
-2. Number of your vacation days you have at the beginning of the year
+1. Option 
+  'm' -> Calculate and show maximum number of consecutive free days in the calendar year
+  'f' -> Calculate and show total free days in the calendar year
+  'a' -> Calculate and show both options: f and m
+2. Year
+3. Number of your vacation days you have at the beginning of the year
 
 e.g. 
-CalcFreeDays 2023 30
-"Calculate the number of free days for the year 2023 with 30 vacation days on 01.01.2023)
+>'CalcFreeDays.exe f 2023 30'
+"Calculate and show the number of free days for the year 2023 with 30 vacation days on 01.01.2023)
 
 # Build 
 1. To build a standalone .exe run this command 
-   dotnet publish -r win10-x64 -p:PublishSingleFile=true
+   'dotnet publish -r win10-x64 -p:PublishSingleFile=true'
 2. Publish .exe and .pdb 
 
 # Possible Improvements
