@@ -31,40 +31,47 @@ internal class main
     {
 
         // Inputs.
-        int numOfVacDays = Int32.Parse(args[1]); 
-        int year = Int32.Parse(args[0]);
+        char option = Char.Parse(args[0]);
+        int year = Int32.Parse(args[1]);
+        int numOfVacDays = Int32.Parse(args[2]);   
 
-        // Basic calculations.
+        Console.WriteLine($"Program executed with option: {option}");
+        
+        // Necessary basic calculations option independent.
         var isLeapYear = DateTime.IsLeapYear(year);
         DateTime new_year = new DateTime(year, 1, 1);
         DayOfWeek dayOne = new_year.DayOfWeek;
         DateTime lastDay = new DateTime(year - 1, 12, 31);
         var dayZero = lastDay.DayOfWeek;
 
-        int numOfHolidaysAreWeekdays = 0;
-        int numOfHolidaysAreWeekend = 0;
+        if (option == 'f' || option == 'a')
+        {
+            int numOfHolidaysAreWeekdays = 0;
+            int numOfHolidaysAreWeekend = 0;
 
-        CalcFixHolidays(year,ref numOfHolidaysAreWeekdays,ref numOfHolidaysAreWeekend);
+            CalcFixHolidays(year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
 
-        CalcVariableHolidays(in year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
+            CalcVariableHolidays(in year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
 
-        int numOfWeekendDays = CalcWeekendDays(in dayOne);
-        
-        // calculate total free days.
-        int totalFreeDays = numOfHolidaysAreWeekdays + numOfVacDays + numOfWeekendDays;
+            int numOfWeekendDays = CalcWeekendDays(in dayOne);
 
-        Console.WriteLine("Since you have: \n" +
-                          $"{numOfVacDays} vacationdays, \n" +
-                          $"{numOfHolidaysAreWeekdays} holidays on workingdays and \n" +
-                          $"{numOfWeekendDays} days which are Saturday or Sunday \n" +
-                          $"-> In total you have {totalFreeDays} free days in {year}");
+            // calculate total free days.
+            int totalFreeDays = numOfHolidaysAreWeekdays + numOfVacDays + numOfWeekendDays;
 
-
-
-        // Feature to calc number of free days in a row 
-        calcMaxNumOfFreeDaysRow(year, numOfVacDays);
+            Console.WriteLine("Since you have: \n" +
+                              $"{numOfVacDays} vacationdays, \n" +
+                              $"{numOfHolidaysAreWeekdays} holidays on workingdays and \n" +
+                              $"{numOfWeekendDays} days which are Saturday or Sunday \n" +
+                              $"-> In total you have {totalFreeDays} free days in {year}");
 
 
+
+            // Feature to calc number of free days in a row 
+        }
+        if (option == 'm' || option == 'a')
+        {
+            calcMaxNumOfFreeDaysRow(year, numOfVacDays);
+        }
     }
 
     private static void calcMaxNumOfFreeDaysRow(int year,int vacDays)

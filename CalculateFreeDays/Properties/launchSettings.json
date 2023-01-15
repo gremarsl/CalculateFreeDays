@@ -1,12 +1,16 @@
 {
   "profiles": {
-    "2023 30": {
+    "m 2023 30": {
       "commandName": "Project",
-      "commandLineArgs": "2023 30"
+      "commandLineArgs": "m 2023 30"
     },
-    "2024 30": {
+    "a 2023 30": {
       "commandName": "Project",
-      "commandLineArgs": "2024 30"
+      "commandLineArgs": "a 2023 30\r\n"
+    },
+    "f 2023 30": {
+      "commandName": "Project",
+      "commandLineArgs": "f 2024 30"
     }
   }
 }
