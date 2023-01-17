@@ -4,6 +4,27 @@ using System.Runtime.InteropServices;
 internal class main
 
 {
+    enum FederalState : int
+    {
+        BadenWuerttemberg = 0,
+        Bayern = 1,
+        Berlin = 2,
+        Brandenburg = 3,
+        Bremen = 4,
+        Hamburg = 5,
+        Hessen = 6,
+        MecklenburgVorpommern = 7,
+        Niedersachsen = 8,
+        NordrheinWestfalen = 9,
+        RheinlandPfalz = 10,
+        Saaland = 11,
+        Sachsen = 12,
+        SachsenAnhalt = 13,
+        SchleswigHolstein = 14,
+        Thueringen = 15
+    }
+
+    private static int federalState;
 
     private static DateTime CalcEasterSunday(int year)
     {
@@ -33,7 +54,8 @@ internal class main
         // Inputs.
         char option = Char.Parse(args[0]);
         int year = Int32.Parse(args[1]);
-        int numOfVacDays = Int32.Parse(args[2]);   
+        int numOfVacDays = Int32.Parse(args[2]);
+        federalState = Int32.Parse(args[3]);
 
         Console.WriteLine($"Program executed with option: {option}");
         
@@ -49,9 +71,9 @@ internal class main
             int numOfHolidaysAreWeekdays = 0;
             int numOfHolidaysAreWeekend = 0;
 
-            CalcFixHolidays(year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
+            CalcNumFixHolidays(year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
 
-            CalcVariableHolidays(in year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
+            CalcNumVariableHolidays(in year, ref numOfHolidaysAreWeekdays, ref numOfHolidaysAreWeekend);
 
             int numOfWeekendDays = CalcWeekendDays(in dayOne);
 
@@ -187,18 +209,97 @@ internal class main
 
     private static DateTime[] GetFixHolidays(int year)
     {
-        DateTime[] fixHolidays = new DateTime[]
-        {
-            new DateTime(year, 01, 01),
-            new DateTime(year, 01, 06),
-            new DateTime(year, 05, 01),
-            new DateTime(year, 10, 03),
-            new DateTime(year, 11, 01),
-            new DateTime(year, 12, 25),
-            new DateTime(year, 12, 26),
-        };
+        List<DateTime> fixHolidays = new List<DateTime>();
+        fixHolidays.Add(new DateTime(year, 01, 01));
+        fixHolidays.Add(new DateTime(year, 05, 01));
+        fixHolidays.Add(new DateTime(year, 10, 03));
+        fixHolidays.Add(new DateTime(year, 12, 25));
+        fixHolidays.Add(new DateTime(year, 12, 26));
 
-        return fixHolidays;
+        switch ((FederalState)federalState)
+        {
+            case FederalState.BadenWuerttemberg:
+                Console.WriteLine("BW");
+                fixHolidays.Add(new DateTime(year, 01, 06));
+                fixHolidays.Add(new DateTime(year, 11, 01));
+
+
+                break;
+            case FederalState.Bayern:
+                fixHolidays.Add(new DateTime(year, 01, 06));
+                fixHolidays.Add(new DateTime(year, 11, 01));
+
+                fixHolidays.Add(new DateTime(year, 08, 15)); // TODO not in all kommunen - maria himmelfahrt
+
+                break;
+            case FederalState.Berlin:
+                fixHolidays.Add(new DateTime(year, 03, 08)); // Frauentag
+
+                break;
+            case FederalState.Brandenburg:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+
+                break;
+            case FederalState.Bremen:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+            case FederalState.Hamburg:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+            case FederalState.Hessen:
+                Console.WriteLine("BW");
+
+                break;
+            case FederalState.MecklenburgVorpommern:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+                break;
+            case FederalState.Niedersachsen:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+            case FederalState.NordrheinWestfalen:
+                fixHolidays.Add(new DateTime(year, 11, 01));
+
+
+                break;
+            case FederalState.RheinlandPfalz:
+                fixHolidays.Add(new DateTime(year, 11, 01));
+
+                break;
+            case FederalState.Saaland:
+                
+                fixHolidays.Add(new DateTime(year, 08, 15));
+                fixHolidays.Add(new DateTime(year, 11, 01));
+
+                break;
+            case FederalState.Sachsen:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+            case FederalState.SachsenAnhalt:
+                Console.WriteLine("BW");
+                fixHolidays.Add(new DateTime(year, 01, 06));
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+            case FederalState.SchleswigHolstein:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+            case FederalState.Thueringen:
+                fixHolidays.Add(new DateTime(year, 10, 31));
+
+                break;
+
+            default:
+                Console.WriteLine("unbekannt");
+                break;
+        }
+
+        return fixHolidays.ToArray();
 
     }
 
@@ -237,7 +338,7 @@ internal class main
         return variableHolidays;
     }
 
-    private static void CalcFixHolidays(in int year,ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
+    private static void CalcNumFixHolidays(in int year,ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
     {
 
         DateTime[] fixHolidays = GetFixHolidays(year);
@@ -257,7 +358,7 @@ internal class main
 
     }
 
-    private static void CalcVariableHolidays(in int year, ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
+    private static void CalcNumVariableHolidays(in int year, ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
     {
         DateTime[] variableholidays = GetVariableHolidays(year);
 
