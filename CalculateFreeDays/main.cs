@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
+using System.Transactions;
 
 internal class main
 
@@ -57,7 +58,11 @@ internal class main
         int numOfVacDays = Int32.Parse(args[2]);
         federalState = Int32.Parse(args[3]);
 
-        Console.WriteLine($"Program executed with option: {option}");
+        Console.WriteLine($"Program executed with:" +
+            $"\noption:                  {option}" +
+            $"\nyear:                    {year}" +
+            $"\nnumber of vacation days: {numOfVacDays}" +
+            $"\nfederal state:           {federalState}");
         
         // Necessary basic calculations option independent.
         var isLeapYear = DateTime.IsLeapYear(year);
@@ -80,7 +85,7 @@ internal class main
             // calculate total free days.
             int totalFreeDays = numOfHolidaysAreWeekdays + numOfVacDays + numOfWeekendDays;
 
-            Console.WriteLine("Since you have: \n" +
+            Console.WriteLine("\nSince you have: \n" +
                               $"{numOfVacDays} vacationdays, \n" +
                               $"{numOfHolidaysAreWeekdays} holidays on workingdays and \n" +
                               $"{numOfWeekendDays} days which are Saturday or Sunday \n" +
@@ -98,6 +103,8 @@ internal class main
 
     private static void calcMaxNumOfFreeDaysRow(int year,int vacDays)
     {
+        Console.WriteLine($"\nStart calculation of maximum possible frees day in a row");
+
         int maximumDaysInARow = 0; 
         int daysInARow;
         DateTime[] fixHolidays = GetFixHolidays(year);
@@ -113,13 +120,12 @@ internal class main
         for (int j = 0; j < totalHolidays.Length; j++)
         {
             int loc_vacDays = vacDays;
-            Console.WriteLine("###");
+
             DateTime vacStart = totalHolidays[j];
 
             int numOfDayStart = vacStart.DayOfYear;
             int end = numOfDayStart + loc_vacDays;
             DateTime vacEnd = new DateTime(year, 1, 1).AddDays(end - 1);
-            Console.WriteLine($"Vacation start: {vacStart} \nVacation end: {vacEnd}\nVacation days {loc_vacDays}");
 
             int holiday_cnt = 0;
             for (int i = 0; i < totalHolidays.Length; i++)
@@ -138,7 +144,6 @@ internal class main
                 }
                 
             }
-            Console.WriteLine($"There are {holiday_cnt} holidays falling on a weekday in your period");
 
             if (vacDays < 5)
             {
@@ -147,7 +152,6 @@ internal class main
                 if (daysInARow > maximumDaysInARow)
                 {
                     maximumDaysInARow = daysInARow;
-                    Console.WriteLine($"New maximum with: {maximumDaysInARow} - So far you can have with {loc_vacDays} vacation days {daysInARow} days in a row free.");
                 }
             }
 
@@ -172,18 +176,14 @@ internal class main
                 if (daysInARow >= maximumDaysInARow)
                 {
                     maximumDaysInARow = daysInARow;
-                    Console.WriteLine($"Maximum with {maximumDaysInARow} days in a row free.");
+                    Console.WriteLine($"\nMaximum with {maximumDaysInARow} days in a row free.");
                     int new_end = numOfDayStart + maximumDaysInARow;
                     DateTime new_vacEnd = new DateTime(year, 1, 1).AddDays(new_end - 1);
                     Console.WriteLine($"Start would be: {vacStart} and would finish on {new_vacEnd}");
                 }
-                
-
                 //TODO: Improve with recursive function call
             }
-
         }
-
     }
 
     private static int CalcWeekendDays(in DayOfWeek dayOne)
@@ -221,94 +221,84 @@ internal class main
         switch ((FederalState)federalState)
         {
             case FederalState.BadenWuerttemberg:
-                Console.WriteLine("BW");
                 fixHolidays.Add(new DateTime(year, 01, 06));
                 fixHolidays.Add(new DateTime(year, 11, 01));
-
-
                 break;
+
             case FederalState.Bayern:
                 fixHolidays.Add(new DateTime(year, 01, 06));
                 fixHolidays.Add(new DateTime(year, 11, 01));
-
                 fixHolidays.Add(new DateTime(year, 08, 15)); // TODO not in all kommunen - maria himmelfahrt
-
                 break;
+
             case FederalState.Berlin:
                 fixHolidays.Add(new DateTime(year, 03, 08)); // Frauentag
-
                 break;
+
             case FederalState.Brandenburg:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
-
                 break;
+
             case FederalState.Bremen:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
+
             case FederalState.Hamburg:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
+
             case FederalState.Hessen:
-                Console.WriteLine("BW");
-
                 break;
+
             case FederalState.MecklenburgVorpommern:
                 fixHolidays.Add(new DateTime(year, 10, 31));
                 break;
+
             case FederalState.Niedersachsen:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
+
             case FederalState.NordrheinWestfalen:
                 fixHolidays.Add(new DateTime(year, 11, 01));
-
-
                 break;
+
             case FederalState.RheinlandPfalz:
                 fixHolidays.Add(new DateTime(year, 11, 01));
-
                 break;
+
             case FederalState.Saaland:
-                
                 fixHolidays.Add(new DateTime(year, 08, 15));
                 fixHolidays.Add(new DateTime(year, 11, 01));
-
                 break;
+
             case FederalState.Sachsen:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
+
             case FederalState.SachsenAnhalt:
-                Console.WriteLine("BW");
                 fixHolidays.Add(new DateTime(year, 01, 06));
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
+
             case FederalState.SchleswigHolstein:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
+
             case FederalState.Thueringen:
                 fixHolidays.Add(new DateTime(year, 10, 31));
-
                 break;
 
             default:
-                Console.WriteLine("unbekannt");
+                Console.WriteLine("Unkown federal state. Please check your arguments.");
                 break;
         }
 
         return fixHolidays.ToArray();
-
     }
 
     private static DateTime[] GetVariableHolidays(int year)
     {
         List<DateTime> variableHolidays = new List<DateTime>();
-
 
         DateTime easterSunday = CalcEasterSunday(year);
         int numberOfDayEasterSunday = easterSunday.DayOfYear;
@@ -354,7 +344,6 @@ internal class main
 
                 break;
             case FederalState.Brandenburg:
-
 
                 break;
             case FederalState.Bremen:

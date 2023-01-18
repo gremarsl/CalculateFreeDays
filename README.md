@@ -14,10 +14,28 @@ Call the CalcFreeDays.exe and pass two arguments.
   'a' -> Calculate and show both options: f and m
 2. Year
 3. Number of your vacation days you have at the beginning of the year
+4. Federal State in Germany. Please pass the corresponding number as an argument 
+      BadenWuerttemberg     = 0
+      Bayern                = 1
+      Berlin                = 2
+      Brandenburg           = 3
+      Bremen                = 4
+      Hamburg               = 5
+      Hessen                = 6
+      MecklenburgVorpommern = 7
+      Niedersachsen         = 8
+      NordrheinWestfalen    = 9
+      RheinlandPfalz        = 10
+      Saaland               = 11
+      Sachsen               = 12
+      SachsenAnhalt         = 13
+      SchleswigHolstein     = 14
+      Thueringen            = 15
+
 
 e.g. 
->'CalcFreeDays.exe f 2023 30'
-"Calculate and show the number of free days for the year 2023 with 30 vacation days on 01.01.2023)
+>'CalcFreeDays.exe f 2023 30 0'
+"Calculate and show the number of free days for the year 2023 with 30 vacation days on 01.01.2023 if I am employed in Baden Württemberg)
 
 # Build 
 1. To build a standalone .exe run this command 
