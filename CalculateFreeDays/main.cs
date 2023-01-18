@@ -210,6 +210,8 @@ internal class main
     private static DateTime[] GetFixHolidays(int year)
     {
         List<DateTime> fixHolidays = new List<DateTime>();
+
+        // fixHolidays national wide
         fixHolidays.Add(new DateTime(year, 01, 01));
         fixHolidays.Add(new DateTime(year, 05, 01));
         fixHolidays.Add(new DateTime(year, 10, 03));
@@ -305,7 +307,8 @@ internal class main
 
     private static DateTime[] GetVariableHolidays(int year)
     {
-        DateTime[] variableHolidays = new DateTime[6];
+        List<DateTime> variableHolidays = new List<DateTime>();
+
 
         DateTime easterSunday = CalcEasterSunday(year);
         int numberOfDayEasterSunday = easterSunday.DayOfYear;
@@ -316,26 +319,93 @@ internal class main
         int eastermonday = numberOfDayEasterSunday + 1;
         DateTime easterMonday = new DateTime(year, 1, 1).AddDays(eastermonday - 1);
 
-        variableHolidays[0] = karFriday;
-        variableHolidays[1] = easterSunday;
-        variableHolidays[2] = easterMonday;
-
         // Calculate Christ Ascension
         int numberOfDayChristAscension = numberOfDayEasterSunday + 39;
         DateTime christAscension = new DateTime(year, 1, 1).AddDays(numberOfDayChristAscension - 1);
-        variableHolidays[3] = christAscension;
 
         // Calculate Pfingstmontag 
         int numberOfDayWhitMonday = numberOfDayEasterSunday + 50;
         DateTime whitmonday = new DateTime(year, 1, 1).AddDays(numberOfDayWhitMonday - 1);
-        variableHolidays[4] = whitmonday;
 
         // Calculate Corpus Christi
         int numberOfDayCorpusChristi = numberOfDayEasterSunday + 60;
         DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
-        variableHolidays[5] = corpusChristi;
 
-        return variableHolidays;
+        // TODO continue here with the differentiation of federal states 
+
+        // national wide
+        variableHolidays.Add(karFriday);
+        variableHolidays.Add(easterSunday);
+        variableHolidays.Add(easterMonday);
+        variableHolidays.Add(christAscension);
+        variableHolidays.Add(whitmonday);
+
+        switch ((FederalState)federalState)
+        {
+            case FederalState.BadenWuerttemberg:
+                variableHolidays.Add(corpusChristi);
+
+                break;
+            case FederalState.Bayern:
+                variableHolidays.Add(corpusChristi);
+
+                break;
+            case FederalState.Berlin:
+
+                break;
+            case FederalState.Brandenburg:
+
+
+                break;
+            case FederalState.Bremen:
+
+                break;
+            case FederalState.Hamburg:
+
+                break;
+            case FederalState.Hessen:
+                variableHolidays.Add(corpusChristi);
+
+                break;
+            case FederalState.MecklenburgVorpommern:
+                break;
+            case FederalState.Niedersachsen:
+
+                break;
+            case FederalState.NordrheinWestfalen:
+                variableHolidays.Add(corpusChristi);
+
+
+                break;
+            case FederalState.RheinlandPfalz:
+                variableHolidays.Add(corpusChristi);
+
+                break;
+            case FederalState.Saaland:
+                variableHolidays.Add(corpusChristi);
+
+                break;
+            case FederalState.Sachsen:
+
+                break;
+            case FederalState.SachsenAnhalt:
+                Console.WriteLine("BW");
+
+                break;
+            case FederalState.SchleswigHolstein:
+
+                break;
+            case FederalState.Thueringen:
+
+                break;
+
+            default:
+                Console.WriteLine("unbekannt");
+                break;
+        }
+
+
+        return variableHolidays.ToArray();
     }
 
     private static void CalcNumFixHolidays(in int year,ref int numOfHolidaysAreWeekdays, ref int numOfHolidaysAreWeekend)
