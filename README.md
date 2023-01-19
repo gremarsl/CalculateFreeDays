@@ -1,17 +1,22 @@
 # CalcFreeDays
 
-This is a small program to calculate the number of free days as an employee in Baden-Württemberg based on your 
-- number of vacation days
-- the number of holidays falling on a working day 
-- days which are Saturdays and Sundays 
+This is a small program to calculate the number of free days as well as maximum number of consecutive free days for employees in Germany. 
+This distinguishes between the federal state the person is employed.
+Based on your inputs the program outputs the result within your console.
+
+formal Inputs:
+- number of vacation days at the beginning of the year
+- the year to be calculated
+- federal state where the person is employed 
 
 # Usage 
 
-Call the CalcFreeDays.exe and pass two arguments. 
-1. Option 
-  'm' -> Calculate and show maximum number of consecutive free days in the calendar year
-  'f' -> Calculate and show total free days in the calendar year
-  'a' -> Calculate and show both options: f and m
+Call the CalcFreeDays.exe and pass four arguments. 
+
+1. Program execution option 
+  'm' -> Calculate maximum number of consecutive free days in the calendar year.
+  'f' -> Calculate total free days in the calendar year.
+  'a' -> Calculate both options: f and m.
 2. Year
 3. Number of your vacation days you have at the beginning of the year
 4. Federal State in Germany. Please pass the corresponding number as an argument 

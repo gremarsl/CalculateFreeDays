@@ -176,10 +176,14 @@ internal class main
                 if (daysInARow >= maximumDaysInARow)
                 {
                     maximumDaysInARow = daysInARow;
-                    Console.WriteLine($"\nMaximum with {maximumDaysInARow} days in a row free.");
+                    
                     int new_end = numOfDayStart + maximumDaysInARow;
                     DateTime new_vacEnd = new DateTime(year, 1, 1).AddDays(new_end - 1);
-                    Console.WriteLine($"Start would be: {vacStart} and would finish on {new_vacEnd}");
+                    Console.WriteLine($"\nNew Maximum:");
+                    Console.WriteLine($"\nMaximum free days in a row: {maximumDaysInARow}. " +
+                                      $"\nStart would be: {vacStart} and would finish on {new_vacEnd}." +
+                                      $"###");
+              
                 }
                 //TODO: Improve with recursive function call
             }
@@ -321,14 +325,52 @@ internal class main
         int numberOfDayCorpusChristi = numberOfDayEasterSunday + 60;
         DateTime corpusChristi = new DateTime(year, 1, 1).AddDays(numberOfDayCorpusChristi - 1);
 
-        // TODO continue here with the differentiation of federal states 
+        // Calculate Buss und Bettag
+        DateTime endOfChurchCalendarYear = new DateTime(year, 11, 23);
+        DayOfWeek endOfChurchCalendarYearDay = endOfChurchCalendarYear.DayOfWeek;
+        
+        int numberOfDayEndOfChurchCalendarYearDay = endOfChurchCalendarYear.DayOfYear;
 
+        DateTime bussAndBettag = new DateTime(year, 1, 1);
+        switch (endOfChurchCalendarYearDay)
+        {
+            case DayOfWeek.Thursday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 1);
+                break;
+            case DayOfWeek.Friday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 2);
+                break;
+            case DayOfWeek.Saturday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 3);
+                break;
+            case DayOfWeek.Sunday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 4);
+                break;
+            case DayOfWeek.Monday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 5);
+
+                break;
+            case DayOfWeek.Tuesday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 6);
+
+                break;
+            case DayOfWeek.Wednesday:
+                bussAndBettag = new DateTime(year, 1, 1).AddDays(numberOfDayEndOfChurchCalendarYearDay - 7);
+
+                break;
+            default:
+                Console.WriteLine("Unkown day for Buss and Bettag.");
+                break;
+
+        }
         // national wide
         variableHolidays.Add(karFriday);
         variableHolidays.Add(easterSunday);
         variableHolidays.Add(easterMonday);
         variableHolidays.Add(christAscension);
         variableHolidays.Add(whitmonday);
+        
+
 
         switch ((FederalState)federalState)
         {
@@ -375,10 +417,10 @@ internal class main
 
                 break;
             case FederalState.Sachsen:
+                variableHolidays.Add(bussAndBettag);
 
                 break;
             case FederalState.SachsenAnhalt:
-                Console.WriteLine("BW");
 
                 break;
             case FederalState.SchleswigHolstein:
@@ -389,11 +431,11 @@ internal class main
                 break;
 
             default:
-                Console.WriteLine("unbekannt");
+                Console.WriteLine("Unkown federal state. Please check your arguments.");
                 break;
         }
 
-
+        
         return variableHolidays.ToArray();
     }
 
@@ -436,8 +478,3 @@ internal class main
         }
     }
 }
-
-
-
-/*
- How to define smart a C# array */
