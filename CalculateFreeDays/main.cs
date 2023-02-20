@@ -58,6 +58,14 @@ internal class main
         int numOfVacDays = Int32.Parse(args[2]);
         federalState = Int32.Parse(args[3]);
 
+        if (option == 'h')
+        {
+            int month = Int32.Parse(args[4]);
+            int office_workdays = Int32.Parse(args[5]);
+
+            // Calculate 
+        }
+
         Console.WriteLine($"Program executed with:" +
             $"\noption:                  {option}" +
             $"\nyear:                    {year}" +
